@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 
 export default function Header() {
   const [user, setUser] = useState<any>(null)
@@ -37,20 +36,9 @@ export default function Header() {
     }
   }, [supabase.auth, router])
   
-  const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.push('/')
-    router.refresh()
-  }
-  
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
   }
-
-  // Get user avatar URL
-  const avatarUrl = user?.user_metadata?.avatar_url || 
-                    user?.identities?.[0]?.identity_data?.avatar_url ||
-                    null
   
   return (
     <header className="bg-white border-b border-gray-200">
@@ -80,34 +68,12 @@ export default function Header() {
             {!loading && (
               user ? (
                 <div className="relative ml-3">
-                  <div className="flex items-center space-x-3">
-                    <Link 
-                      href="/app" 
-                      className="inline-flex items-center text-blue-600 border border-blue-500 font-medium rounded-md text-sm px-4 py-2 hover:bg-blue-50"
-                    >
-                      Dashboard
-                    </Link>
-                    
-                    <div className="flex items-center space-x-3">
-                      {avatarUrl && (
-                        <div className="h-8 w-8 rounded-full overflow-hidden border border-gray-200">
-                          <Image 
-                            src={avatarUrl} 
-                            alt="User profile" 
-                            width={32} 
-                            height={32}
-                            className="h-full w-full object-cover"
-                          />
-                        </div>
-                      )}
-                      <button
-                        onClick={handleSignOut}
-                        className="text-gray-700 hover:text-blue-600 text-sm font-medium"
-                      >
-                        Sign out
-                      </button>
-                    </div>
-                  </div>
+                  <Link 
+                    href="/app" 
+                    className="inline-flex items-center text-blue-600 border border-blue-500 font-medium rounded-md text-sm px-4 py-2 hover:bg-blue-50"
+                  >
+                    Dashboard
+                  </Link>
                 </div>
               ) : (
                 <div className="flex items-center space-x-3">
@@ -169,34 +135,12 @@ export default function Header() {
             {!loading && (
               user ? (
                 <>
-                  <div className="flex items-center px-3 py-2">
-                    {avatarUrl && (
-                      <div className="h-8 w-8 rounded-full overflow-hidden border border-gray-200 mr-3">
-                        <Image 
-                          src={avatarUrl} 
-                          alt="User profile" 
-                          width={32} 
-                          height={32}
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                    )}
-                    <span className="text-sm font-medium text-gray-700 truncate">
-                      {user.email}
-                    </span>
-                  </div>
                   <Link 
                     href="/app" 
                     className="block px-3 py-2 rounded-md text-base font-medium text-blue-600 hover:bg-blue-50"
                   >
                     Dashboard
                   </Link>
-                  <button
-                    onClick={handleSignOut}
-                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                  >
-                    Sign out
-                  </button>
                 </>
               ) : (
                 <>
